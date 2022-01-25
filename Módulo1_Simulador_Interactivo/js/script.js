@@ -1,12 +1,31 @@
 // Armar un simulador interactivo, la estructura final de tu proyecto integrador.
+// Incorporar objetos en donde sea necesario
+// Agregar Array
 
-// función principal
-let compra = () => {
-  // Consulta el producto a comprar
+// Creo clase, con su respectivo constructor, referenciando los datos de la compra
+class CompraCte {
+  constructor(producto, precio, medioPago, descuento, totalPago) {
+    this.producto = producto;
+    this.precio = parseFloat(precio);
+    this.medioPago = medioPago;
+    this.descuento = descuento;
+    this.totalPago = totalPago;
+  }
+
+  descripcionCompra() {
+    alert(
+      `Compraste: ${this.producto}.\nValor: $${this.precio}.\nPor abonar con '${this.medioPago}' tenes un descuento del ${this.descuento}%.\nPrecio final: $${this.totalPago}.`
+    );
+  }
+}
+
+const comprasTotales = [];
+
+let datosCompra = () => {
+  // 1er dato: Se consulta el producto a comprar, mediante un while se verifica que "exista" dicho producto.
   let producto = prompt(
-    "Ingrese el producto que desea comprar:\n-Teclado\n-Mouse\n-Auriculares\n-Monitor\n-Notebook"
+    "Ingrese el producto que desea comprar: \n-Teclado \n-Mouse \n-Auriculares \n-Monitor \n-Notebook"
   ).toUpperCase();
-  //  Ciclo para validar que se ingrese un valor válido
   while (
     producto != "TECLADO" &&
     producto != "MOUSE" &&
@@ -15,61 +34,77 @@ let compra = () => {
     producto != "NOTEBOOK"
   ) {
     producto = prompt(
-      "Producto no disponible, ingrese el producto que desea comprar: \n-Teclado\n-Mouse\n-Auriculares\n-Monitor\n-Notebook"
+      "Producto no disponible, ingrese el producto que desea comprar: \n-Teclado \n-Mouse \n-Auriculares \n-Monitor \n-Notebook"
     ).toUpperCase();
   }
 
-  // Según producto se almacena el precio
-  let precioProd = (prod) => {
-    if (prod == "TECLADO") return 5000;
-    if (prod == "MOUSE") return 2500;
-    if (prod == "AURICULARES") return 7500;
-    if (prod == "MONITOR") return 45000;
-    if (prod == "NOTEBOOK") return 155000;
-  };
+  // 2do dato: Mediante un switch se adquiere el precio del preducto elegido
+  let precio;
+  switch (producto) {
+    case "TECLADO":
+      precio = 5000;
+      break;
+    case "MOUSE":
+      precio = 2500;
+      break;
+    case "AURICULARES":
+      precio = 7500;
+      break;
+    case "MONITOR":
+      precio = 45000;
+      break;
+    case "NOTEBOOK":
+      precio = 155000;
+      break;
+  }
 
-  // Se obtiene el modo de pago
-  let medioPago = prompt(
-    "Eliga medio de pago:\nEF: Efectivo\nDEB: Débito\nTC: Crédito"
+  // 3er dato: Se consulta medio de pago, se valido que elija una opción valida.
+  let tipoPago = prompt(
+    "Eliga medio de pago: \nEF: Efectivo \nDEB: Débito \nTC: Crédito"
   ).toUpperCase();
-  //  Ciclo para validar que se ingrese un valor válido
-  while (medioPago != "EF" && medioPago != "DEB" && medioPago != "TC") {
-    medioPago = prompt(
-      "Medio de pago inexistente. Ingrese:\nEF: para efectivo\nDEB: para débito\nTC: para crédito"
+  while (tipoPago != "EF" && tipoPago != "DEB" && tipoPago != "TC") {
+    tipoPago = prompt(
+      "Medio de pago inexistente. Ingrese: \nEF: para efectivo \nDEB: para débito \nTC: para crédito"
     ).toUpperCase();
   }
 
-  // Acá se empiezan a usar los datos obtenidos. En base al medio de pago se realiza un descuento sobre el valor del producto, el cual se muestra como alerta
-  switch (medioPago) {
-    case "EF":
-      alert(
-        `Por abonar en Efectivo tienes un descuento del 25%.\nProducto: ${producto} $${precioProd(
-          producto
-        )} - 25%.\nTotal a pagar = $${precioProd(producto) * 0.75}`
-      );
-      break;
-    case "DEB":
-      alert(
-        `Por abonar con Tarjeta de Débito tienes un descuento del 15%.\nProducto: ${producto} $${precioProd(
-          producto
-        )} - 15%.\nTotal a pagar = $${precioProd(producto) * 0.85}`
-      );
-      break;
-    case "TC":
-      alert(
-        `Por abonar con Tarjeta de Crédito tienes un descuento del 10%.\nProducto: ${producto} $${precioProd(
-          producto
-        )} - 10%.\nTotal a pagar = $${precioProd(producto) * 0.9}`
-      );
-      break;
-  }
+  // 4to dato: En base al medio de pago elegido se retorna el descuento otorgado.
+  let descuento;
+  if (tipoPago == "EF") [(tipoPago = "Efectivo"), (descuento = 25)];
+  if (tipoPago == "DEB") [(tipoPago = "Tarjeta de Débito"), (descuento = 15)];
+  if (tipoPago == "TC") [(tipoPago = "Tarjeta de Crédito"), (descuento = 10)];
+
+  // 5to dato: Se calcula el precio final que abonará el cliente, tomando el precio y descuento según medio de pago. Se utiliza operación larga ya que el valor del descuento puede variar.
+  let totalAPagar = precio - (precio * descuento) / 100;
+
+  // La función retorna los 5 datos necesarios para crear el objeto.
+  return [producto, precio, tipoPago, descuento, totalAPagar];
 };
 
 // Para iniciar el programa consulta si desea hacer una compra
 let hacerCompra = confirm("Desea hacer una compra?");
 
-// Si el valor es true inicia el ciclo, ejecutando la función principal para la compra y al final del proceso se vuelve a consultar si desea hacer otra compra, si acepta se repite el bucle sino finaliza.
+// Si el valor es true inicia el ciclo, ejecutando la función principal para la compra
 while (hacerCompra == true) {
-  compra();
+  // Se toman los datos que retorna la función.
+  let [producto, precio, tipoPago, descuento, totalAPagar] = datosCompra();
+  // Se crea objeto
+  let compra1 = new CompraCte(
+    producto,
+    precio,
+    tipoPago,
+    descuento,
+    totalAPagar
+  );
+  // Se agrega al Array
+  comprasTotales.push(compra1);
+
+  // Se ejecuta el método que posee la clase para mostrar el detalle de la compra.
+  compra1.descripcionCompra();
+
+  // Por último se consulta si desea hacer nueva comprar, sino se cierra el ciclo.
   hacerCompra = confirm("Desea hacer una nueva compra?");
 }
+
+// Al finalizar el ciclo muestra el array con todos los objetos (compras) creados por consola.
+console.log(comprasTotales);
